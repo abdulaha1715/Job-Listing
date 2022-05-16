@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Root Route
-Route::get('/', [JobListingController::class, 'index']);
+Route::get('/', [JobListingController::class, 'home_list']);
 
 // Listing Route
-Route::resource('job-listing', JobListing::class);
+Route::resource('listing', JobListingController::class);

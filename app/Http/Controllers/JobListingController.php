@@ -12,11 +12,16 @@ class JobListingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function home_list()
+    {
+        return view('listing.index')->with([
+            'listings' => JobListing::latest()->filter(request(['tag', 'search']))->paginate(10)
+        ]);
+    }
+
     public function index()
     {
-        return view('listing', [
-            'listings' => JobListing::orderBy('id','DESC')->paginate(10)
-        ]);
+
     }
 
     /**
@@ -26,7 +31,7 @@ class JobListingController extends Controller
      */
     public function create()
     {
-        //
+        return view('listing.create');
     }
 
     /**
@@ -46,9 +51,11 @@ class JobListingController extends Controller
      * @param  \App\Models\JobListing  $jobListing
      * @return \Illuminate\Http\Response
      */
-    public function show(JobListing $jobListing)
+    public function show($id)
     {
-        //
+        return view('listing.show')->with([
+            'listing' => JobListing::findOrFail($id)
+        ]);
     }
 
     /**
