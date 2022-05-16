@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\JobListing;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        User::create([
+            'name'      => 'Abdulaha Islam',
+            'email'     => 'abdulahaislam210917@gmail.com',
+            'password'  => bcrypt('01918786189'),
+        ]);
+
+        JobListing::factory(23)->create();
     }
 }
