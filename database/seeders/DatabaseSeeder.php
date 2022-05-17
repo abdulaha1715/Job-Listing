@@ -21,6 +21,6 @@ class DatabaseSeeder extends Seeder
             'password'  => bcrypt('01918786189'),
         ]);
 
-        JobListing::factory(23)->create();
+        JobListing::factory(13)->create();
     }
 }

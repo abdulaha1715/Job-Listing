@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobListing;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class JobListingController extends Controller
 {
@@ -42,7 +43,41 @@ class JobListingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->logo);
+
+        $request->validate([
+            'title'       => 'required',
+            'company'     => ['required'],
+            'location'    => 'required',
+            'email'       => ['required', 'email'],
+            'website'     => 'required',
+            'logo'        => ['image'],
+            'tags'        => 'required',
+            'description' => 'required',
+        ]);
+
+        try {
+            $logo = null;
+            if (!empty($request->file('logo'))) {
+                $logo = time() . '-' . $request->file('logo')->getClientOriginalName();
+                $request->file('logo')->storeAs('public/logos', $logo);
+            }
+
+            JobListing::create([
+                'title'       => $request->title,
+                'logo'        => $logo,
+                'company'     => $request->company,
+                'location'    => $request->location,
+                'email'       => $request->email,
+                'website'     => $request->website,
+                'tags'        => $request->tags,
+                'description' => $request->description,
+            ]);
+
+            return redirect('/')->with('message', "Listing Added Successfully!");
+        } catch (\Throwable $th) {
+            return redirect('/')->with('error', $th->getMessage());
+        }
     }
 
     /**
