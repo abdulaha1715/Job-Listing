@@ -9,7 +9,11 @@ class JobListing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'company', 'location', 'email', 'website', 'tags', 'description'];
+    protected $table = "job_listings";
+
+    // protected $fillable = ['title', 'logo', 'company', 'location', 'email', 'website', 'tags', 'description'];
+
+    protected $guarded = ['id','created_at', 'updated_at'];
 
     public function scopeFilter($query, array $filters) {
         if($filters['tag'] ?? false) {

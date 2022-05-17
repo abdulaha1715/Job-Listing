@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobListing;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class JobListingController extends Controller
 {
@@ -43,8 +44,6 @@ class JobListingController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->logo);
-
         $request->validate([
             'title'       => 'required',
             'company'     => ['required'],
@@ -99,9 +98,11 @@ class JobListingController extends Controller
      * @param  \App\Models\JobListing  $jobListing
      * @return \Illuminate\Http\Response
      */
-    public function edit(JobListing $jobListing)
+    public function edit($id)
     {
-        //
+        return view('listing.edit')->with([
+            'listing'    => JobListing::findOrFail($id),
+        ]);
     }
 
     /**
@@ -111,9 +112,43 @@ class JobListingController extends Controller
      * @param  \App\Models\JobListing  $jobListing
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobListing $jobListing)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title'       => 'required',
+            'company'     => ['required'],
+            'location'    => 'required',
+            'email'       => ['required', 'email'],
+            'website'     => 'required',
+            'logo'        => ['image'],
+            'tags'        => 'required',
+            'description' => 'required',
+        ]);
+
+        try {
+            $logo = null;
+            $logo = JobListing::find($id)->logo;
+            if (!empty($request->file('logo'))) {
+                Storage::delete('public/logos/'.$logo);
+                $logo = time() . '-' . $request->file('logo')->getClientOriginalName();
+                $request->file('logo')->storeAs('public/logos', $logo);
+            }
+
+            JobListing::find($id)->update([
+                'title'       => $request->title,
+                'logo'        => $logo,
+                'company'     => $request->company,
+                'location'    => $request->location,
+                'email'       => $request->email,
+                'website'     => $request->website,
+                'tags'        => $request->tags,
+                'description' => $request->description,
+            ]);
+
+            return back()->with('message', "Listing Update Successfully!");
+        } catch (\Throwable $th) {
+            return redirect('/')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -122,8 +157,11 @@ class JobListingController extends Controller
      * @param  \App\Models\JobListing  $jobListing
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JobListing $jobListing)
+    public function destroy(JobListing $jobListing, $id)
     {
-        //
+        $logo = JobListing::find($id);
+        Storage::delete('public/logos/'.$logo->logo);
+        JobListing::find($id)->delete();
+        return redirect()->route('home')->with('message', "Listing Deleted");
     }
 }
