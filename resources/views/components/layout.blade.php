@@ -45,7 +45,7 @@
                     <a href="{{ route('register') }}" class="hover:text-laravel"><i class="fa-solid fa-user-plus"></i> Register</a>
                 </li>
                 <li>
-                    <a href="{{ route('login') }}login" class="hover:text-laravel"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
+                    <a href="{{ route('login') }}" class="hover:text-laravel"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
                 </li>
                 @endauth
 

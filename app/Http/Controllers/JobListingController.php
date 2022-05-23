@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Storage;
 class JobListingController extends Controller
 {
     /**
+     * Construct function
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create','edit','store','update','destroy']);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

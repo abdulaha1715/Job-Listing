@@ -9,6 +9,13 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
+     * Construct function
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->only(['create','login']);
+    }
+    /**
      * Show the form for creating a new user.
      *
      * @return \Illuminate\Http\Response
@@ -56,6 +63,27 @@ class UserController extends Controller
     public function login()
     {
         return view('users.login');
+    }
+
+    /**
+     * User Log In Authentication.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function authentication(Request $request)
+    {
+        $authLogin = $request->validate([
+            'email'    => ['required', 'email'],
+            'password' => 'required',
+        ]);
+
+        if(auth()->attempt($authLogin)) {
+            $request->session()->regenerate();
+
+            return redirect('/')->with('message', 'You are now logged in!');
+        }
+
+        return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
 
     /**
