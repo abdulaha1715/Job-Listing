@@ -164,4 +164,10 @@ class JobListingController extends Controller
         JobListing::find($id)->delete();
         return redirect()->route('home')->with('message', "Listing Deleted");
     }
+
+    public function manage() {
+        return view('listing.index')->with([
+            'listings' => JobListing::latest()->filter(request(['tag', 'search']))->paginate(10)
+        ]);
+    }
 }
