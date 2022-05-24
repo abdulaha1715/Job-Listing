@@ -30,3 +30,6 @@ Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 // User Log In
 Route::post('/user/login', [UserController::class, 'authentication'])->name('auth-log');
+
+// Manage Listings
+Route::get('/listings/manage', [JobListingController::class, 'manage'])->name('manage');
